@@ -2,6 +2,8 @@ import { writable, type Writable } from "svelte/store";
 import { ErrorCode, Format, type AppHistory } from "$lib/types";
 import { FORMATS } from "$lib/constants";
 
+import { browser } from "$app/environment";
+
 export interface Transformation {
   input: Format;
   output: Format;
@@ -22,8 +24,44 @@ export const INITIAL_STORE: AppStore = {
   history: [],
 }
 
+let initialStore: AppStore | undefined;
+
+const LOCALSTORAGE_KEY = 'app-data';
+
+try {
+  console.log(browser);
+  const cachedData = browser &&
+    localStorage?.getItem(LOCALSTORAGE_KEY) || '';
+  if (cachedData) {
+    const data = JSON.parse(cachedData);
+    const requiredKeys = new Set([
+      "history", "preset"
+    ]);
+    const existingKeus = new Set(Object.keys(data));
+
+    if (requiredKeys.isSubsetOf(existingKeus)) {
+      initialStore = data;
+    }
+  }
+} catch (err) {
+  console.error("Parsing localstorage failed.", err);
+} finally {
+  if (!initialStore) {
+    initialStore = { ...INITIAL_STORE };
+  }
+}
+
 export const appStore: Writable<AppStore> =
-  writable({ ...INITIAL_STORE });
+  writable({ ...initialStore });
+
+if (browser) {
+  appStore.subscribe((state) => {
+    localStorage?.setItem(
+      LOCALSTORAGE_KEY,
+      JSON.stringify(state),
+    );
+  });
+}
 
 export const storeActions = {
   updateCurrentValue: (value: number) => {

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { readonly } from "svelte/store";
+  import { blur, fade } from "svelte/transition";
+
   import Header from "$lib/components/Header.svelte";
   import Input from "$lib/components/Input.svelte";
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
@@ -6,7 +9,8 @@
 
   import { appStore, storeActions } from "$lib/store";
   import { ERROR_MESSAGES } from "$lib/constants";
-  import { readonly } from "svelte/store";
+
+  export const ssr = false;
 
   const readonlyStore = readonly(appStore);
 
@@ -25,7 +29,10 @@
   <div class="results">
     <div class="history-wrapper">
       { #each $readonlyStore.history as historyEntry }
-        <div class="history-entry">
+        <div
+          class="history-entry"
+          transition:blur|fade={{ duration: 300 }}
+        >
           <HistoryEntry
             entry={historyEntry}
           />
