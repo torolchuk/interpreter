@@ -1,13 +1,29 @@
-import { Format } from "$lib/types";
+import { Format, type FormatData, ErrorCode } from "$lib/types";
 
-export const FORMAT_PREFIXES: Record<Format, string> = {
-  [Format.Decimal]: "0d",
-  [Format.Hexadecimal]: "0x",
-  [Format.Binary]: "0b",
+export const FORMATS: Record<Format, FormatData> = {
+  [Format.Decimal]: {
+    type: Format.Decimal,
+    prefix: "0d",
+    placeholder: "0000",
+    code: 10,
+  },
+  [Format.Hexadecimal]: {
+    type: Format.Hexadecimal,
+    prefix: "0x",
+    transformPrefix: "0x",
+    placeholder: "0000",
+    code: 16,
+  },
+  [Format.Binary]: {
+    type: Format.Hexadecimal,
+    prefix: "0b",
+    transformPrefix: "0b",
+    placeholder: "0000",
+    code: 2,
+  },
+}
+
+export const ERROR_MESSAGES: Partial<Record<ErrorCode, string>> = {
+  [ErrorCode.NaN]: "Wrong number.",
 };
 
-export const FORMAT_PLACEHOLDERS: Record<Format, string> = {
-  [Format.Decimal]: "0000",
-  [Format.Hexadecimal]: "0000",
-  [Format.Binary]: "0000",
-}

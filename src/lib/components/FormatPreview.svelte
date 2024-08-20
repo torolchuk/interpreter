@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { FORMAT_PREFIXES } from "$lib/constants";
+  import { FORMATS } from "$lib/constants";
   import { type Format } from "$lib/types"; 
 
   export let format: Format;
@@ -22,6 +22,6 @@
   }
 </style>
 
-<span class="text">{FORMAT_PREFIXES?.[format]}</span>
+<span class="text">{FORMATS[format].prefix}</span>
 <div class="splitter"></div>
 

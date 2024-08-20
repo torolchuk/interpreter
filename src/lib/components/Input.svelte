@@ -15,10 +15,6 @@
     align-items: center;
   }
 
-  .input-container__focused {
-    margin-right: 20px;
-  }
-
   .input {
     font-size: 24px;
     font-weight: 700;
@@ -29,6 +25,7 @@
     border-left: none;
     border-right: none;
     width: 100%;
+    text-transform: uppercase;
   }
 
   .input:hover,
@@ -75,7 +72,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { Format } from "$lib/types";
-  import { FORMAT_PLACEHOLDERS } from "$lib/constants";
+  import { FORMATS } from "$lib/constants";
   import FormatPreview from "$lib/components/FormatPreview.svelte";
   
   export let format: Format;
@@ -84,7 +81,7 @@
   const dispatch = createEventDispatcher();
 
   const onInputUpdate = (event) =>
-    dispatch("inputUpdate", { value: event });
+    dispatch("inputUpdate", { value: event.target.value });
 
   const onSettingsClick = () =>
     dispatch("settingsClick");
@@ -99,14 +96,14 @@
 </script>
 
 <div class="wrapper">
-  <div class={`input-container ${isInputFocused && 'input-container__focused'}`}>
+  <div class="input-container">
     <FormatPreview format={format} />
     <input
       class="input"
       on:input={onInputUpdate}
       on:focus={handleInputFocus}
       on:blur={handleInputBlur}
-      placeholder={FORMAT_PLACEHOLDERS?.[format]}
+      placeholder={FORMATS[format].placeholder}
     >
   </div>
   { #if !isInputFocused }
@@ -116,12 +113,12 @@
     >
       <img src="/icons/settings.png" alt="settings icon" />
     </button>
-    <button
-      class="save-button"
-      on:click={onSaveClick}
-    >
-      <img src="/icons/save.svg" alt="save icon" />
-    </button>
   { /if }
+  <button
+    class="save-button"
+    on:click={onSaveClick}
+  >
+    <img src="/icons/save.svg" alt="save icon" />
+  </button>
 </div>
 
