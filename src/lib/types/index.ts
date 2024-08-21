@@ -1,5 +1,6 @@
 export interface FormatData {
   type: Format,
+  title: string,
   prefix: string,
   transformPrefix?: string;
   placeholder: string;

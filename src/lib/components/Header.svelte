@@ -5,13 +5,15 @@
 <style>
   .header {
     height: 60px;
-    background-color: rgba(255, 255, 255, .2);
+    background-color: rgba(255, 255, 255, .8);
     backdrop-filter: blur(10px); 
     box-shadow: 0 4px 16px 0 rgba(0, 0, 0, .05);
     display: flex;
     padding: 0 16px;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    z-index: 2;
   }
 
   .logo {

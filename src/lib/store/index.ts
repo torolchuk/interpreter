@@ -90,4 +90,14 @@ export const storeActions = {
       ],
     }));
   },
+  updateSettings: (data: Partial<Pick<AppStore, "preset">>) => {
+    console.log(data);
+    appStore.update((state) => ({
+      ...state,
+      preset: {
+        ...state.preset,
+        ...data,
+      },
+    }));
+  },
 };
