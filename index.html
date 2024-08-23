@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      body, html {
+        padding: 0;
+        margin: 0 !important;
+      }
+      
+      *, input, input::placeholder {
+        font-family: "Fira Mono";
+        box-sizing: border-box;
+      }
+
+      .app-wrapper {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        margin: 50px auto;
+        height: calc(100vh - 100px);
+      }
+
+      .page-wrapper {
+        width: 393px;
+        max-height: 852px;
+        height: 100%;
+        border: 2px solid rgba(0,0,0,.05);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+      }
+    </style>
+		
+		<link href="./_app/immutable/assets/0.IOg-jOIo.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/2.CuXyUbwB.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.BF6kP4vK.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CgDU4i15.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.BM1MAZf4.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.D2ZFTe3a.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.D_Sky0xX.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.CGPKVJc8.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.Cy7c6p4m.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.QyDHgM4e.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div class="app-wrapper">
+      <div class="page-wrapper">
+          <div class="header svelte-1tibibq" data-svelte-h="svelte-1neczfw"><span class="logo svelte-1tibibq">Interpreter</span> <a class="github-link svelte-1tibibq" href="https://github.com/torolchuk/interpreter" target="_blank"><img class="github-icon svelte-1tibibq" src="/icons/github.png" alt="github icon"></a></div> <div class="page-container svelte-uyfol"><div class="results svelte-uyfol"><div class="history-wrapper svelte-uyfol"></div></div> <div class="quick-preview svelte-uyfol blurred"><div class="container svelte-9hjtah"><span class="text svelte-ouibur">0x</span> <div class="splitter"></div> <span class="text placeholder svelte-9hjtah">00000000</span> </div></div> <div class="input-box svelte-uyfol"><div class="wrapper svelte-1hxd85j"><div class="input-container svelte-1hxd85j"><span class="text svelte-ouibur">0d</span> <div class="splitter"></div> <input class="input svelte-1hxd85j" placeholder="0000"></div> <button class="settings-button svelte-1hxd85j" data-svelte-h="svelte-xnnbh8"><img src="/icons/settings.png" alt="settings icon"></button> <button class="save-button svelte-1hxd85j" data-svelte-h="svelte-ouesjl"><img src="/icons/save.svg" alt="save icon"></button></div></div></div> <div class="settings-container svelte-uyfol"><div><div class="title-box svelte-11q5eyt"><h3 class="text-color svelte-11q5eyt" data-svelte-h="svelte-1m49p0b">Tranformation Settings</h3> <button class="close-btn svelte-11q5eyt"></button></div> <div class="wrapper svelte-tfn4y1"><label control=""><span class="label-text svelte-tfn4y1">Input Format</span> <select class="select svelte-k00g2t"><option value="decimal">Decimal </option><option value="hexadecimal">Hexadecimal </option><option value="binary">Binary </option></select></label> </div> <div class="wrapper svelte-tfn4y1"><label control=""><span class="label-text svelte-tfn4y1">Output Format</span> <select class="select svelte-k00g2t"><option value="decimal">Decimal </option><option value="hexadecimal">Hexadecimal </option><option value="binary">Binary </option></select></label> </div> </div> </div> 
+			
+			<script>
+				{
+					__sveltekit_1j5o44d = {
+						base: new URL(".", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.BF6kP4vK.js"),
+						import("./_app/immutable/entry/app.D_Sky0xX.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		
+      </div>
+	</body>
+</html>
