@@ -10,8 +10,6 @@
   import { appStore, storeActions } from "$lib/store";
   import { ERROR_MESSAGES } from "$lib/constants";
 
-  export const ssr = false;
-
   let isSettingsOpened = false;
 
   const readonlyStore = readonly(appStore);
