@@ -73,6 +73,7 @@
   import { createEventDispatcher } from "svelte";
   import { Format } from "$lib/types";
   import { FORMATS } from "$lib/constants";
+  import { base } from "$app/paths";
   import FormatPreview from "$lib/components/FormatPreview.svelte";
   
   export let format: Format;
@@ -111,14 +112,14 @@
       class="settings-button"
       on:click={onSettingsClick}
     >
-      <img src="/icons/settings.png" alt="settings icon" />
+      <img src="{base}/icons/settings.png" alt="settings icon" />
     </button>
   { /if }
   <button
     class="save-button"
     on:click={onSaveClick}
   >
-    <img src="/icons/save.svg" alt="save icon" />
+    <img src="{base}/icons/save.svg" alt="save icon" />
   </button>
 </div>
 

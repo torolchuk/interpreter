@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import { base } from "$app/paths";
 
 </script>
 
@@ -40,6 +41,6 @@
     href="https://github.com/torolchuk/interpreter"
     target="_blank"
   >
-    <img class="github-icon" src="/icons/github.png" alt="github icon">
+    <img class="github-icon" src="{base}/icons/github.png" alt="github icon">
   </a>
 </div>
