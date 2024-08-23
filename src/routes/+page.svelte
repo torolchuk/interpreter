@@ -2,7 +2,6 @@
   import { readonly } from "svelte/store";
   import { blur } from "svelte/transition";
 
-  import Header from "$lib/components/Header.svelte";
   import Input from "$lib/components/Input.svelte";
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
   import HistoryEntry from "$lib/components/HistoryEntry.svelte";
@@ -18,7 +17,7 @@
   const readonlyStore = readonly(appStore);
 
   const handleInputUpdate = (event) => {
-    const value = Number(event.detail.value);
+    const { value } = event.detail;
     storeActions.updateCurrentValue(value);
   };
 
@@ -31,10 +30,8 @@
   const handleSettingsCloseClick = () => {
     isSettingsOpened = false;
   }
-  
 </script>
 
-<Header />
 
 <div class="page-container" class:hidden={isSettingsOpened}>
   <div class="results">
@@ -42,7 +39,7 @@
       { #each $readonlyStore.history as historyEntry }
         <div
           class="history-entry"
-          transition:blur|fade={{ duration: 300 }}
+          transition:blur|fade|slide={{ duration: 300 }}
         >
           <HistoryEntry
             entry={historyEntry}
@@ -50,14 +47,17 @@
         </div>
       { /each }
     </div>
-    <div class="quick-preview" class:blurred={!$readonlyStore.currentData}>
-      <ConvertViewer
-        format={$readonlyStore?.preset?.output}
-        value={$readonlyStore.currentData}
-        placeholder="00000000"
-        error={ERROR_MESSAGES?.[$readonlyStore.error]}
-      />
-    </div>
+  </div>
+  <div
+    class="quick-preview"
+    class:blurred={!$readonlyStore.currentData}
+  >
+    <ConvertViewer
+      format={$readonlyStore?.preset?.output}
+      value={$readonlyStore.currentData}
+      placeholder="00000000"
+      error={ERROR_MESSAGES?.[$readonlyStore.error]}
+    />
   </div>
   <div class="input-box">
     <Input
@@ -121,7 +121,9 @@
   }
 
   .quick-preview {
+    flex-shrink: 0;
     transition: all ease-out .2s;
+    margin-bottom: 40px;
   }
 
   .quick-preview.blurred {
@@ -132,6 +134,8 @@
   .results {
     margin-bottom: 24px;
     margin-top: auto;
+    overflow-y: scroll;
+    padding-top: 40px;
   }
 
   .input-box {}
