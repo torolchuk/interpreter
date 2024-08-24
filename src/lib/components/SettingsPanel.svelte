@@ -1,5 +1,6 @@
 <script lang="ts">
   import SelectInput from "$lib/components/SelectInput.svelte";
+  import ByteDataInputs from "$lib/components/ByteDataInputs.svelte";
   import { FORMATS } from "$lib/constants";
   import { Format } from "$lib/types";
   import { storeActions, appStore } from "$lib/store";
@@ -33,7 +34,7 @@
 
 <div class="container">
   <div class="title-box">
-    <h3 class="text-color">
+    <h3 class="text-color title">
       Tranformation Settings
     </h3>
     <button class="close-btn" on:click={handleCloseClick} />
@@ -53,6 +54,7 @@
     on:change={updateSettings}
   />
 
+  <ByteDataInputs />
 
   <button on:click={handleClearHistory} class="button-clear-history">
     Clear History
@@ -65,10 +67,16 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: scroll;
+    padding: 20px;
   }
 
   .title-box {
     position: relative
+  }
+
+  .title {
+    margin: 0 0 40px 0;
   }
 
   .close-btn {
@@ -128,5 +136,6 @@
     border: none;
     margin-bottom: 20px;
     cursor: pointer;
+    flex-shrink: 0;
   }
 </style>

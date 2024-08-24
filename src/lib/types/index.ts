@@ -30,3 +30,15 @@ export interface AppHistoryEntry {
 
 export type AppHistory = AppHistoryEntry[];
 
+
+export interface ByteInterpretation {
+  enabled: boolean;
+  byteData?: ByteData;
+}
+
+export type ByteData = Array<BitData>;
+
+export interface BitData {
+  label: string; 
+}
+

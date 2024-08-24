@@ -1,15 +1,16 @@
 <script lang="ts">
   export let label: string = "";
   export let control: string = "";
+  export let element: string = "label";
 </script>
 
 <div class="wrapper">
-  <label control={control}>
+  <svelte:element this={element} control={control}>
     <span class="label-text">
       {label}
     </span>
     <slot />
-  </label>
+  </svelte:element>
 </div>
 
 <style>

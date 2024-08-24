@@ -96,7 +96,7 @@
     visibility: hidden;
     background-color: #1a1d23;
     transition: all ease-out .2s;
-    padding: 10px 60px;
+    padding: 0 40px;
     box-shadow: inset 0 16px 64px 0 rgba(255, 255, 255, 0.3), 0 -8px 32px 0 rgba(0, 0, 0, 0.2);
   }
 
