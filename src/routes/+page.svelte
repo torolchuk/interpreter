@@ -53,7 +53,7 @@
     <ConvertViewer
       format={$readonlyStore?.preset?.output}
       value={$readonlyStore.currentData}
-      placeholder="00000000"
+      placeholder="helloworld"
       error={ERROR_MESSAGES?.[$readonlyStore.error]}
     />
   </div>
