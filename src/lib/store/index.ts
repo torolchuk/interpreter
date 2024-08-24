@@ -90,6 +90,12 @@ export const storeActions = {
       ],
     }));
   },
+  clearHistory: () => {
+    appStore.update((state) => ({
+      ...state,
+      history: [],
+    }));
+  },
   updateSettings: (data: Partial<Pick<AppStore, "preset">>) => {
     console.log(data);
     appStore.update((state) => ({

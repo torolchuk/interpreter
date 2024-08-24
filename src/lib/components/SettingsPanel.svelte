@@ -16,6 +16,10 @@
 
   const handleCloseClick = () => dispatch("close");
 
+  const handleClearHistory = () => {
+    storeActions.clearHistory();
+  }
+
   const formatOptions = Object.values(FORMATS)
     .reduce((acc, format) => ({
       ...acc,
@@ -48,6 +52,11 @@
     bind:value={output}
     on:change={updateSettings}
   />
+
+
+  <button on:click={handleClearHistory}>
+    Clear history
+  </button>
 
 </div>
 
