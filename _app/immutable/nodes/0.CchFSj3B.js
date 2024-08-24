@@ -1,6 +1,6 @@
 import { s as safe_not_equal, e as element, c as claim_element, w as get_svelte_dataset, p as attr, i as insert_hydration, n as noop, f as detach, x as create_slot, a as space, g as claim_space, y as update_slot_base, z as get_all_dirty_from_scope, A as get_slot_changes } from "../chunks/scheduler.DQacw1iJ.js";
 import { S as SvelteComponent, i as init, b as create_component, d as claim_component, m as mount_component, a as transition_in, t as transition_out, e as destroy_component } from "../chunks/index.D1CR_pH_.js";
-import { b as base } from "../chunks/paths.QnzqLOB5.js";
+import { b as base } from "../chunks/paths.2Fy-cCs7.js";
 const prerender = true;
 const _layout = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
