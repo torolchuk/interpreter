@@ -31,7 +31,7 @@
   };
 </script>
 
-<div>
+<div class="container">
   <div class="title-box">
     <h3 class="text-color">
       Tranformation Settings
@@ -54,13 +54,19 @@
   />
 
 
-  <button on:click={handleClearHistory}>
-    Clear history
+  <button on:click={handleClearHistory} class="button-clear-history">
+    Clear History
   </button>
 
 </div>
 
 <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   .title-box {
     position: relative
   }
@@ -107,5 +113,20 @@
   
   .text-color {
     color: #fff;
+  }
+
+  .button-clear-history {
+    margin-top: auto;
+    width: 100%;
+    background: #ff4747;
+    box-shadow: 0 1px 4px 0 rgba(255, 71, 71, 0.5), 0 4px 16px 0 rgba(255, 71, 71, 0.2);
+    border-radius: 8px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    border: none;
+    margin-bottom: 20px;
+    cursor: pointer;
   }
 </style>
