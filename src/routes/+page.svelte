@@ -60,7 +60,7 @@
     { #if $readonlyStore.interpretation.enabled }
       <div class="byte-viewer">
         <ByteDataViewer
-          value={$readonlyStore.current}
+          value={$readonlyStore.currentData}
           data={$readonlyStore.interpretation.byteData}
         />
       </div>

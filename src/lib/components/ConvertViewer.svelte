@@ -7,13 +7,31 @@
   export let value: number;
   export let error: string;
   export let placeholder: string;
+  
+  const addConstantPrefix = (value: string, targetLength: number, char: string): string => {
+    console.log(value);
+    const curLength = value?.length ?? 0;
+    if (curLength >= targetLength) return value;
+
+    const prefixLenght = targetLength - curLength;
+    return new Array(prefixLenght).fill(char).join('') + value;
+  } 
+  
+  $: transformedValue = (value)?.toString(FORMATS[format].code);
+  
+  $: previewValue = addConstantPrefix(
+    transformedValue,
+    8,
+    '0',
+  )
+
 </script>
 
 <div class="container">
   <FormatPreview {format} />
   { #if !!value }
     <span class="text">
-      {(value).toString(FORMATS[format].code)}
+      {previewValue}
     </span>
   { :else if !!error }
     <span class="text error">
