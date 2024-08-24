@@ -5,17 +5,12 @@
   import InputContainer from "$lib/components/InputContainer.svelte";
   import BitDataInput from "$lib/components/BitDataInput.svelte";
 
-  import { storeActions, appStore, type AppState } from "$lib/store";
+  import { storeActions, appStore } from "$lib/store";
 
   const readonlyStore = readonly(appStore);
   const byteDataPlaceholder = new Array(8);
-  let byteData;
-  readonlyStore.subscribe((state: AppState) => {
-    byteData = arrayHelpers.merge(
-      byteDataPlaceholder,
-      state.interpretation.byteData,
-    );
-  });
+
+  $: byteData = arrayHelpers.merge($readonlyStore.interpretation.byteData, byteDataPlaceholder);
 
   const handleCheckboxClick = () => {
     const action = $readonlyStore.interpretation.enabled

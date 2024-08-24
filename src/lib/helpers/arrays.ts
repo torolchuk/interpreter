@@ -1,6 +1,6 @@
 export const merge = <T>(a: Array<T>, b: Array<T>): Array<T> => {
   const l = Math.max(a.length, b.length);
-  const r = [];
+  const r = new Array(l);
 
   for (let i = 0; i < l; i += 1) {
     if (b[i]) {

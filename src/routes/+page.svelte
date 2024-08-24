@@ -6,6 +6,7 @@
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
   import HistoryEntry from "$lib/components/HistoryEntry.svelte";
   import SettingsPanel from "$lib/components/SettingsPanel.svelte";
+  import ByteDataViewer from "$lib/components/ByteDataViewer.svelte";
 
   import { appStore, storeActions } from "$lib/store";
   import { ERROR_MESSAGES } from "$lib/constants";
@@ -56,6 +57,14 @@
       placeholder="helloworld"
       error={ERROR_MESSAGES?.[$readonlyStore.error]}
     />
+    { #if $readonlyStore.interpretation.enabled }
+      <div class="byte-viewer">
+        <ByteDataViewer
+          value={$readonlyStore.current}
+          data={$readonlyStore.interpretation.byteData}
+        />
+      </div>
+    { /if }
   </div>
   <div class="input-box">
     <Input
@@ -78,6 +87,10 @@
     display: flex;
     flex-direction: column;
     transition: all ease-out .2s;
+  }
+
+  .byte-viewer {
+    margin-left: 70px;
   }
 
   .page-container.hidden {
