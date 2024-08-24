@@ -247,6 +247,41 @@ function attr(node, attribute, value) {
   if (value == null) node.removeAttribute(attribute);
   else if (node.getAttribute(attribute) !== value) node.setAttribute(attribute, value);
 }
+const always_set_through_set_attribute = ["width", "height"];
+function set_attributes(node, attributes) {
+  const descriptors = Object.getOwnPropertyDescriptors(node.__proto__);
+  for (const key in attributes) {
+    if (attributes[key] == null) {
+      node.removeAttribute(key);
+    } else if (key === "style") {
+      node.style.cssText = attributes[key];
+    } else if (key === "__value") {
+      node.value = node[key] = attributes[key];
+    } else if (descriptors[key] && descriptors[key].set && always_set_through_set_attribute.indexOf(key) === -1) {
+      node[key] = attributes[key];
+    } else {
+      attr(node, key, attributes[key]);
+    }
+  }
+}
+function set_custom_element_data_map(node, data_map) {
+  Object.keys(data_map).forEach((key) => {
+    set_custom_element_data(node, key, data_map[key]);
+  });
+}
+function set_custom_element_data(node, prop, value) {
+  const lower = prop.toLowerCase();
+  if (lower in node) {
+    node[lower] = typeof node[lower] === "boolean" && value === "" ? true : value;
+  } else if (prop in node) {
+    node[prop] = typeof node[prop] === "boolean" && value === "" ? true : value;
+  } else {
+    attr(node, prop, value);
+  }
+}
+function set_dynamic_element_data(tag) {
+  return /-/.test(tag) ? set_custom_element_data_map : set_attributes;
+}
 function get_svelte_dataset(node) {
   return node.dataset.svelteH;
 }
@@ -500,7 +535,7 @@ function flush_render_callbacks(fns) {
   render_callbacks = filtered;
 }
 export {
-  toggle_class as $,
+  select_value as $,
   get_slot_changes as A,
   get_root_for_style as B,
   append_empty_stylesheet as C,
@@ -523,12 +558,14 @@ export {
   split_css_unit as T,
   listen as U,
   createEventDispatcher as V,
-  select_option as W,
-  destroy_each as X,
-  select_value as Y,
-  set_input_value as Z,
-  add_flush_callback as _,
+  destroy_each as W,
+  toggle_class as X,
+  assign as Y,
+  set_dynamic_element_data as Z,
+  select_option as _,
   space as a,
+  set_input_value as a0,
+  add_flush_callback as a1,
   children as b,
   claim_element as c,
   claim_text as d,
