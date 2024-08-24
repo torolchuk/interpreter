@@ -92,6 +92,9 @@ export const storeActions = {
         {
           preset: { ...state.preset },
           value: state.currentData as number,
+          byteData: state.interpretation.enabled ?
+            state.interpretation.byteData :
+            undefined,
         },
       ],
     }));

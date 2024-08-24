@@ -26,10 +26,10 @@ export interface PresetData {
 export interface AppHistoryEntry {
   preset: PresetData;
   value: number;
+  byteData?: ByteData;
 }
 
 export type AppHistory = AppHistoryEntry[];
-
 
 export interface ByteInterpretation {
   enabled: boolean;

@@ -58,12 +58,10 @@
       error={ERROR_MESSAGES?.[$readonlyStore.error]}
     />
     { #if $readonlyStore.interpretation.enabled }
-      <div class="byte-viewer">
-        <ByteDataViewer
-          value={$readonlyStore.currentData}
-          data={$readonlyStore.interpretation.byteData}
-        />
-      </div>
+      <ByteDataViewer
+        value={$readonlyStore.currentData}
+        data={$readonlyStore.interpretation.byteData}
+      />
     { /if }
   </div>
   <div class="input-box">
@@ -87,10 +85,6 @@
     display: flex;
     flex-direction: column;
     transition: all ease-out .2s;
-  }
-
-  .byte-viewer {
-    margin-left: 70px;
   }
 
   .page-container.hidden {

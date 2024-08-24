@@ -10,21 +10,24 @@
   
 </script>
 
-{ #each viewerData as bitData, index }
-  <span
-    class="char"
-    class:positive={isBitPositive(value, 7 - index)}
-  >{ bitData?.label?.[0] ?? '_' }</span>
-{ /each }
+<div class="container">
+  { #each viewerData as bitData, index }
+    <span class="char"
+      class:positive={isBitPositive(value, 7 - index)}
+    >{ bitData?.label?.[0] ?? '_' }</span>
+  { /each }
+</div>
 
 <style>
-
-.char {
-  font-size: 24px;
-  font-weight: 700;
-  color: rgba(0, 0, 0, .2);
-}
-.positive {
-  color: black;
-}
+  .container {
+    margin-left: 70px;
+  }
+  .char {
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, .2);
+  }
+  .positive {
+    color: black;
+  }
 </style>
