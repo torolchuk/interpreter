@@ -1,9 +1,10 @@
-import { writable, type Writable } from "svelte/store";
+import { readonly, writable, type Writable } from "svelte/store";
 import { ErrorCode, Format, type AppHistory, type ByteInterpretation } from "$lib/types";
 import { FORMATS } from "$lib/constants";
 import { interpretation } from "$lib/helpers";
 
 import { browser } from "$app/environment";
+import { LOCALSTORAGE_KEY } from "./consts";
 
 export interface Transformation {
   input: Format;
@@ -32,10 +33,7 @@ export const INITIAL_STORE: AppStore = {
 
 let initialStore: AppStore | undefined;
 
-const LOCALSTORAGE_KEY = 'app-data';
-
 try {
-  console.log(browser);
   const cachedData = browser &&
     localStorage?.getItem(LOCALSTORAGE_KEY) || '';
   if (cachedData) {
@@ -57,7 +55,7 @@ try {
   }
 }
 
-export const appStore: Writable<AppStore> =
+const appStore: Writable<AppStore> =
   writable({ ...initialStore });
 
 if (browser) {
@@ -69,7 +67,9 @@ if (browser) {
   });
 }
 
-export const storeActions = {
+export const read = readonly(appStore);
+
+export const actions = {
   updateCurrentValue: (value: number) => {
     appStore.update((state) => {
       const inputFormat = state.preset.input;
@@ -106,7 +106,6 @@ export const storeActions = {
     }));
   },
   updateSettings: (data: Partial<Pick<AppStore, "preset">>) => {
-    console.log(data);
     appStore.update((state) => ({
       ...state,
       preset: {

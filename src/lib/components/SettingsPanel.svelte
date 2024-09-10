@@ -3,22 +3,19 @@
   import ByteDataInputs from "$lib/components/ByteDataInputs.svelte";
   import { FORMATS } from "$lib/constants";
   import { Format } from "$lib/types";
-  import { storeActions, appStore } from "$lib/store";
+  import { read, actions } from "$lib/store";
 
-  import { readonly } from "svelte/store";
   import { createEventDispatcher } from "svelte";
 
-  const readonlyStore = readonly(appStore);
-
-  let input: Format = $readonlyStore.preset.input;
-  let output: Format = $readonlyStore.preset.output;
+  let input: Format = $read.preset.input;
+  let output: Format = $read.preset.output;
 
   const dispatch = createEventDispatcher();
 
   const handleCloseClick = () => dispatch("close");
 
   const handleClearHistory = () => {
-    storeActions.clearHistory();
+    actions.clearHistory();
   }
 
   const formatOptions = Object.values(FORMATS)
@@ -28,7 +25,7 @@
     }), {});
 
   const updateSettings = () => {
-    storeActions.updateSettings({ input, output });
+    actions.updateSettings({ input, output });
   };
 </script>
 

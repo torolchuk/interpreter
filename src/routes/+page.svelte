@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { readonly } from "svelte/store";
-  import { blur } from "svelte/transition";
+  import { slide } from "svelte/transition";
 
   import Input from "$lib/components/Input.svelte";
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
@@ -8,19 +7,17 @@
   import SettingsPanel from "$lib/components/SettingsPanel.svelte";
   import ByteDataViewer from "$lib/components/ByteDataViewer.svelte";
 
-  import { appStore, storeActions } from "$lib/store";
+  import { read, actions } from "$lib/store";
   import { ERROR_MESSAGES } from "$lib/constants";
 
   let isSettingsOpened = false;
 
-  const readonlyStore = readonly(appStore);
-
   const handleInputUpdate = (event) => {
     const { value } = event.detail;
-    storeActions.updateCurrentValue(value);
+    actions.updateCurrentValue(value);
   };
 
-  const handleSaveClick = () => storeActions.saveToHistory();
+  const handleSaveClick = () => actions.saveToHistory();
 
   const handleSettingsOpenClick = () => {
     isSettingsOpened = true;
@@ -35,10 +32,10 @@
 <div class="page-container" class:hidden={isSettingsOpened}>
   <div class="results">
     <div class="history-wrapper">
-      { #each $readonlyStore.history as historyEntry }
+      { #each $read.history as historyEntry }
         <div
           class="history-entry"
-          transition:blur|fade|slide={{ duration: 300 }}
+          transition:slide={{ duration: 300 }}
         >
           <HistoryEntry
             entry={historyEntry}
@@ -49,18 +46,18 @@
   </div>
   <div
     class="quick-preview"
-    class:blurred={!$readonlyStore.currentData}
+    class:blurred={!$read.currentData}
   >
     <ConvertViewer
-      format={$readonlyStore?.preset?.output}
-      value={$readonlyStore.currentData}
+      format={$read?.preset?.output}
+      value={$read.currentData}
       placeholder="helloworld"
-      error={ERROR_MESSAGES?.[$readonlyStore.error]}
+      error={ERROR_MESSAGES?.[$read.error]}
     />
-    { #if $readonlyStore.interpretation.enabled }
+    { #if $read.interpretation.enabled }
       <ByteDataViewer
-        value={$readonlyStore.currentData}
-        data={$readonlyStore.interpretation.byteData}
+        value={$read.currentData}
+        data={$read.interpretation.byteData}
       />
     { /if }
   </div>
@@ -69,7 +66,7 @@
       on:inputUpdate={handleInputUpdate}
       on:saveClick={handleSaveClick}
       on:settingsClick={handleSettingsOpenClick}
-      format={$readonlyStore.preset.input}
+      format={$read.preset.input}
     />
   </div>
 </div>
@@ -153,5 +150,4 @@
     margin-bottom: 20px;
   }
 </style>
-
 
