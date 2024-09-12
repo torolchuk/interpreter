@@ -14,10 +14,6 @@
 
   const handleCloseClick = () => dispatch("close");
 
-  const handleClearHistory = () => {
-    actions.clearHistory();
-  }
-
   const formatOptions = Object.values(FORMATS)
     .reduce((acc, format) => ({
       ...acc,
@@ -52,10 +48,6 @@
   />
 
   <ByteDataInputs />
-
-  <button on:click={handleClearHistory} class="button-clear-history">
-    Clear History
-  </button>
 
 </div>
 
@@ -118,21 +110,5 @@
   
   .text-color {
     color: #fff;
-  }
-
-  .button-clear-history {
-    margin-top: auto;
-    width: 100%;
-    background: #ff4747;
-    box-shadow: 0 1px 4px 0 rgba(255, 71, 71, 0.5), 0 4px 16px 0 rgba(255, 71, 71, 0.2);
-    border-radius: 8px;
-    height: 40px;
-    font-size: 16px;
-    font-weight: 700;
-    color: #fff;
-    border: none;
-    margin-bottom: 20px;
-    cursor: pointer;
-    flex-shrink: 0;
   }
 </style>

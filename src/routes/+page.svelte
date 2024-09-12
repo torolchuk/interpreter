@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
+  import { slide, blur } from "svelte/transition";
 
   import Input from "$lib/components/Input.svelte";
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
@@ -26,11 +26,22 @@
   const handleSettingsCloseClick = () => {
     isSettingsOpened = false;
   }
+
+  const handleClearHistoryClick = () => {
+    actions.clearHistory();
+  }
 </script>
 
 
 <div class="page-container" class:hidden={isSettingsOpened}>
   <div class="results">
+    { #if $read.history.length }
+      <div class="clear-wrapper">
+        <button class="clear-button" transition:blur={{ duration: 300 }} on:click={handleClearHistoryClick}>
+          Clear History
+        </button>
+      </div>
+    { /if }
     <div class="history-wrapper">
       { #each $read.history as historyEntry }
         <div
@@ -89,6 +100,24 @@
     filter: blur(4px);
     opacity: 80%;
     pointer-events: none;
+  }
+
+  .clear-wrapper {
+    margin-bottom: 40px;
+    padding: 0 40px;
+  }
+
+  .clear-button {
+    width: 100%;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid rgba(0, 0, 0, .2);
+    background: #fff;
+    box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.25), inset 0 4px 16px 0 rgba(0, 0, 0, 0.1), 0 16px 64px 0 rgba(0, 0, 0, .1);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    color: rgba(0, 0, 0, .4);
   }
 
   .settings-container {
