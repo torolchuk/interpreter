@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-import { n as noop, B as get_root_for_style, C as append_empty_stylesheet, f as detach, D as run_all, E as is_function, F as add_render_callback, G as custom_event, H as identity, I as blank_object, b as children, J as flush, K as is_empty, L as flush_render_callbacks, M as current_component, N as set_current_component, O as run, P as dirty_components, Q as schedule_update, R as start_hydrating, S as end_hydrating } from "./scheduler.2olhEwHt.js";
+import { n as noop, B as get_root_for_style, f as detach, C as append_empty_stylesheet, D as run_all, E as is_function, F as add_render_callback, G as custom_event, H as identity, I as blank_object, b as children, J as flush, K as is_empty, L as flush_render_callbacks, M as current_component, N as set_current_component, O as run, P as dirty_components, Q as schedule_update, R as start_hydrating, S as end_hydrating } from "./scheduler.2olhEwHt.js";
 const is_client = typeof window !== "undefined";
 let now = is_client ? () => window.performance.now() : () => Date.now();
 let raf = is_client ? (cb) => requestAnimationFrame(cb) : noop;
@@ -137,6 +137,137 @@ function transition_out(block, local, detach2, callback) {
   }
 }
 const null_transition = { duration: 0 };
+function create_in_transition(node, fn, params) {
+  const options = { direction: "in" };
+  let config = fn(node, params, options);
+  let running = false;
+  let animation_name;
+  let task;
+  let uid = 0;
+  function cleanup() {
+    if (animation_name) delete_rule(node, animation_name);
+  }
+  function go() {
+    const {
+      delay = 0,
+      duration = 300,
+      easing = identity,
+      tick = noop,
+      css
+    } = config || null_transition;
+    if (css) animation_name = create_rule(node, 0, 1, duration, delay, easing, css, uid++);
+    tick(0, 1);
+    const start_time = now() + delay;
+    const end_time = start_time + duration;
+    if (task) task.abort();
+    running = true;
+    add_render_callback(() => dispatch(node, true, "start"));
+    task = loop((now2) => {
+      if (running) {
+        if (now2 >= end_time) {
+          tick(1, 0);
+          dispatch(node, true, "end");
+          cleanup();
+          return running = false;
+        }
+        if (now2 >= start_time) {
+          const t = easing((now2 - start_time) / duration);
+          tick(t, 1 - t);
+        }
+      }
+      return running;
+    });
+  }
+  let started = false;
+  return {
+    start() {
+      if (started) return;
+      started = true;
+      delete_rule(node);
+      if (is_function(config)) {
+        config = config(options);
+        wait().then(go);
+      } else {
+        go();
+      }
+    },
+    invalidate() {
+      started = false;
+    },
+    end() {
+      if (running) {
+        cleanup();
+        running = false;
+      }
+    }
+  };
+}
+function create_out_transition(node, fn, params) {
+  const options = { direction: "out" };
+  let config = fn(node, params, options);
+  let running = true;
+  let animation_name;
+  const group = outros;
+  group.r += 1;
+  let original_inert_value;
+  function go() {
+    const {
+      delay = 0,
+      duration = 300,
+      easing = identity,
+      tick = noop,
+      css
+    } = config || null_transition;
+    if (css) animation_name = create_rule(node, 1, 0, duration, delay, easing, css);
+    const start_time = now() + delay;
+    const end_time = start_time + duration;
+    add_render_callback(() => dispatch(node, false, "start"));
+    if ("inert" in node) {
+      original_inert_value = /** @type {HTMLElement} */
+      node.inert;
+      node.inert = true;
+    }
+    loop((now2) => {
+      if (running) {
+        if (now2 >= end_time) {
+          tick(0, 1);
+          dispatch(node, false, "end");
+          if (!--group.r) {
+            run_all(group.c);
+          }
+          return false;
+        }
+        if (now2 >= start_time) {
+          const t = easing((now2 - start_time) / duration);
+          tick(1 - t, t);
+        }
+      }
+      return running;
+    });
+  }
+  if (is_function(config)) {
+    wait().then(() => {
+      config = config(options);
+      go();
+    });
+  } else {
+    go();
+  }
+  return {
+    end(reset) {
+      if (reset && "inert" in node) {
+        node.inert = original_inert_value;
+      }
+      if (reset && config.tick) {
+        config.tick(1, 0);
+      }
+      if (running) {
+        if (animation_name) delete_rule(node, animation_name);
+        running = false;
+      }
+    }
+  };
+}
 function create_bidirectional_transition(node, fn, params, intro) {
   const options = { direction: "both" };
   let config = fn(node, params, options);
@@ -425,6 +556,8 @@ export {
   group_outros as g,
   create_bidirectional_transition as h,
   init as i,
+  create_in_transition as j,
+  create_out_transition as k,
   mount_component as m,
   transition_out as t
 };

@@ -1,7 +1,7 @@
-import { T as split_css_unit, s as safe_not_equal, e as element, t as text, a as space, c as claim_element, b as children, d as claim_text, f as detach, g as claim_space, p as attr, i as insert_hydration, h as append_hydration, j as set_data, n as noop, w as get_svelte_dataset, U as listen, D as run_all, V as createEventDispatcher, W as destroy_each, X as toggle_class, l as empty, x as create_slot, Y as assign, Z as set_dynamic_element_data, y as update_slot_base, z as get_all_dirty_from_scope, A as get_slot_changes, F as add_render_callback, _ as select_option, $ as select_value, a0 as set_input_value, k as component_subscribe, r as binding_callbacks, a1 as add_flush_callback } from "../chunks/scheduler.2olhEwHt.js";
-import { S as SvelteComponent, i as init, b as create_component, d as claim_component, m as mount_component, a as transition_in, t as transition_out, e as destroy_component, g as group_outros, c as check_outros, f as bind, h as create_bidirectional_transition } from "../chunks/index.DugqZQEa.js";
+import { T as split_css_unit, H as identity, s as safe_not_equal, e as element, t as text, a as space, c as claim_element, b as children, d as claim_text, f as detach, g as claim_space, p as attr, i as insert_hydration, h as append_hydration, j as set_data, n as noop, w as get_svelte_dataset, U as listen, D as run_all, V as createEventDispatcher, W as destroy_each, X as toggle_class, l as empty, x as create_slot, Y as assign, Z as set_dynamic_element_data, y as update_slot_base, z as get_all_dirty_from_scope, A as get_slot_changes, F as add_render_callback, _ as select_option, $ as select_value, a0 as set_input_value, k as component_subscribe, r as binding_callbacks, a1 as add_flush_callback } from "../chunks/scheduler.2olhEwHt.js";
+import { S as SvelteComponent, i as init, b as create_component, d as claim_component, m as mount_component, a as transition_in, t as transition_out, e as destroy_component, g as group_outros, c as check_outros, f as bind, h as create_bidirectional_transition, j as create_in_transition, k as create_out_transition } from "../chunks/index.CP9GwhRj.js";
+import { b as base } from "../chunks/paths.DO85oBZT.js";
 import { w as writable, r as readonly } from "../chunks/index.DWBBBJzv.js";
-import { b as base } from "../chunks/paths.D9PnueWZ.js";
 const BROWSER = true;
 function ensure_array_like(array_like_or_iterator) {
   return (array_like_or_iterator == null ? void 0 : array_like_or_iterator.length) !== void 0 ? array_like_or_iterator : Array.from(array_like_or_iterator);
@@ -40,6 +40,10 @@ const browser = BROWSER;
 function cubicInOut(t) {
   return t < 0.5 ? 4 * t * t * t : 0.5 * Math.pow(2 * t - 2, 3) + 1;
 }
+function cubicOut(t) {
+  const f = t - 1;
+  return f * f * f + 1;
+}
 function blur(node, { delay = 0, duration = 400, easing = cubicInOut, amount = 5, opacity = 0 } = {}) {
   const style = getComputedStyle(node);
   const target_opacity = +style.opacity;
@@ -51,6 +55,41 @@ function blur(node, { delay = 0, duration = 400, easing = cubicInOut, amount = 5
     duration,
     easing,
     css: (_t, u) => `opacity: ${target_opacity - od * u}; filter: ${f} blur(${u * value}${unit});`
+  };
+}
+function fade(node, { delay = 0, duration = 400, easing = identity } = {}) {
+  const o = +getComputedStyle(node).opacity;
+  return {
+    delay,
+    duration,
+    easing,
+    css: (t) => `opacity: ${t * o}`
+  };
+}
+function slide(node, { delay = 0, duration = 400, easing = cubicOut, axis = "y" } = {}) {
+  const style = getComputedStyle(node);
+  const opacity = +style.opacity;
+  const primary_property = axis === "y" ? "height" : "width";
+  const primary_property_value = parseFloat(style[primary_property]);
+  const secondary_properties = axis === "y" ? ["top", "bottom"] : ["left", "right"];
+  const capitalized_secondary_properties = secondary_properties.map(
+    (e) => `${e[0].toUpperCase()}${e.slice(1)}`
+  );
+  const padding_start_value = parseFloat(style[`padding${capitalized_secondary_properties[0]}`]);
+  const padding_end_value = parseFloat(style[`padding${capitalized_secondary_properties[1]}`]);
+  const margin_start_value = parseFloat(style[`margin${capitalized_secondary_properties[0]}`]);
+  const margin_end_value = parseFloat(style[`margin${capitalized_secondary_properties[1]}`]);
+  const border_width_start_value = parseFloat(
+    style[`border${capitalized_secondary_properties[0]}Width`]
+  );
+  const border_width_end_value = parseFloat(
+    style[`border${capitalized_secondary_properties[1]}Width`]
+  );
+  return {
+    delay,
+    duration,
+    easing,
+    css: (t) => `overflow: hidden;opacity: ${Math.min(t * 20, 1) * opacity};${primary_property}: ${t * primary_property_value}px;padding-${secondary_properties[0]}: ${t * padding_start_value}px;padding-${secondary_properties[1]}: ${t * padding_end_value}px;margin-${secondary_properties[0]}: ${t * margin_start_value}px;margin-${secondary_properties[1]}: ${t * margin_end_value}px;border-${secondary_properties[0]}-width: ${t * border_width_start_value}px;border-${secondary_properties[1]}-width: ${t * border_width_end_value}px;`
   };
 }
 var Format = /* @__PURE__ */ ((Format2) => {
@@ -173,11 +212,11 @@ function create_if_block$3(ctx) {
     },
     l(nodes) {
       button = claim_element(nodes, "BUTTON", { class: true, ["data-svelte-h"]: true });
-      if (get_svelte_dataset(button) !== "svelte-dut131") button.innerHTML = textContent;
+      if (get_svelte_dataset(button) !== "svelte-13src7v") button.innerHTML = textContent;
       this.h();
     },
     h() {
-      attr(button, "class", "settings-button svelte-1hxd85j");
+      attr(button, "class", "settings-button hover-opacity svelte-1c0y9ks");
     },
     m(target, anchor) {
       insert_hydration(target, button, anchor);
@@ -248,19 +287,19 @@ function create_fragment$9(ctx) {
       if (if_block) if_block.l(div1_nodes);
       t2 = claim_space(div1_nodes);
       button = claim_element(div1_nodes, "BUTTON", { class: true, ["data-svelte-h"]: true });
-      if (get_svelte_dataset(button) !== "svelte-80yy6o") button.innerHTML = textContent;
+      if (get_svelte_dataset(button) !== "svelte-wdjlfu") button.innerHTML = textContent;
       div1_nodes.forEach(detach);
       this.h();
     },
     h() {
-      attr(input, "class", "input svelte-1hxd85j");
+      attr(input, "class", "input svelte-1c0y9ks");
       attr(input, "placeholder", input_placeholder_value = FORMATS[
         /*format*/
         ctx[0]
       ].placeholder);
-      attr(div0, "class", "input-container svelte-1hxd85j");
-      attr(button, "class", "save-button svelte-1hxd85j");
-      attr(div1, "class", "wrapper svelte-1hxd85j");
+      attr(div0, "class", "input-container svelte-1c0y9ks");
+      attr(button, "class", "save-button hover-opacity svelte-1c0y9ks");
+      attr(div1, "class", "wrapper svelte-1c0y9ks");
     },
     m(target, anchor) {
       insert_hydration(target, div1, anchor);
@@ -423,7 +462,7 @@ function create_else_block(ctx) {
     }
   };
 }
-function create_if_block_1(ctx) {
+function create_if_block_1$1(ctx) {
   let span;
   let t;
   return {
@@ -526,7 +565,7 @@ function create_fragment$8(ctx) {
     if (!!/*value*/
     ctx2[1]) return create_if_block$2;
     if (!!/*error*/
-    ctx2[2]) return create_if_block_1;
+    ctx2[2]) return create_if_block_1$1;
     return create_else_block;
   }
   let current_block_type = select_block_type(ctx);
@@ -1624,6 +1663,7 @@ class BitDataInput extends SvelteComponent {
     init(this, options, instance$3, create_fragment$3, safe_not_equal, { index: 1, value: 0, disabled: 2 });
   }
 }
+const LOCALSTORAGE_KEY = "app-data";
 const INITIAL_STORE = {
   preset: {
     input: Format.Decimal,
@@ -1636,9 +1676,7 @@ const INITIAL_STORE = {
   }
 };
 let initialStore;
-const LOCALSTORAGE_KEY = "app-data";
 try {
-  console.log(browser);
   const cachedData = browser && (localStorage == null ? void 0 : localStorage.getItem(LOCALSTORAGE_KEY)) || "";
   if (cachedData) {
     const data = JSON.parse(cachedData);
@@ -1667,7 +1705,8 @@ const appStore = writable({ ...initialStore });
     );
   });
 }
-const storeActions = {
+const read = readonly(appStore);
+const actions = {
   updateCurrentValue: (value) => {
     appStore.update((state) => {
       const inputFormat = state.preset.input;
@@ -1701,7 +1740,6 @@ const storeActions = {
     }));
   },
   updateSettings: (data) => {
-    console.log(data);
     appStore.update((state) => ({
       ...state,
       preset: {
@@ -1746,8 +1784,8 @@ const storeActions = {
 };
 function get_each_context$1(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[6] = list[i];
-  child_ctx[8] = i;
+  child_ctx[5] = list[i];
+  child_ctx[7] = i;
   return child_ctx;
 }
 function create_each_block$1(ctx) {
@@ -1760,23 +1798,23 @@ function create_each_block$1(ctx) {
     props: {
       index: (
         /*index*/
-        ctx[8]
+        ctx[7]
       ),
       value: (
         /*bitData*/
-        ((_a = ctx[6]) == null ? void 0 : _a.label) ?? null
+        ((_a = ctx[5]) == null ? void 0 : _a.label) ?? null
       ),
-      disabled: !/*$readonlyStore*/
+      disabled: !/*$read*/
       ctx[0].interpretation.enabled
     }
   });
   bitdatainput.$on(
     "change",
     /*handleBitDataChange*/
-    ctx[4].bind(
+    ctx[3].bind(
       null,
       /*index*/
-      ctx[8]
+      ctx[7]
     )
   );
   return {
@@ -1808,9 +1846,9 @@ function create_each_block$1(ctx) {
       const bitdatainput_changes = {};
       if (dirty & /*byteData*/
       2) bitdatainput_changes.value = /*bitData*/
-      ((_a2 = ctx2[6]) == null ? void 0 : _a2.label) ?? null;
-      if (dirty & /*$readonlyStore*/
-      1) bitdatainput_changes.disabled = !/*$readonlyStore*/
+      ((_a2 = ctx2[5]) == null ? void 0 : _a2.label) ?? null;
+      if (dirty & /*$read*/
+      1) bitdatainput_changes.disabled = !/*$read*/
       ctx2[0].interpretation.enabled;
       bitdatainput.$set(bitdatainput_changes);
     },
@@ -1878,11 +1916,11 @@ function create_default_slot(ctx) {
     },
     h() {
       attr(input, "type", "checkbox");
-      input.checked = input_checked_value = /*$readonlyStore*/
+      input.checked = input_checked_value = /*$read*/
       ctx[0].interpretation.enabled;
       attr(div0, "class", "checkbox svelte-rawjgr");
       attr(div1, "class", "inputs-box svelte-rawjgr");
-      toggle_class(div1, "disabled", !/*$readonlyStore*/
+      toggle_class(div1, "disabled", !/*$read*/
       ctx[0].interpretation.enabled);
     },
     m(target, anchor) {
@@ -1901,19 +1939,19 @@ function create_default_slot(ctx) {
           input,
           "click",
           /*handleCheckboxClick*/
-          ctx[3]
+          ctx[2]
         );
         mounted = true;
       }
     },
     p(ctx2, dirty) {
-      if (!current || dirty & /*$readonlyStore*/
-      1 && input_checked_value !== (input_checked_value = /*$readonlyStore*/
+      if (!current || dirty & /*$read*/
+      1 && input_checked_value !== (input_checked_value = /*$read*/
       ctx2[0].interpretation.enabled)) {
         input.checked = input_checked_value;
       }
-      if (dirty & /*byteData, $readonlyStore, handleBitDataChange*/
-      19) {
+      if (dirty & /*byteData, $read, handleBitDataChange*/
+      11) {
         each_value = ensure_array_like(
           /*byteData*/
           ctx2[1]
@@ -1937,9 +1975,9 @@ function create_default_slot(ctx) {
         }
         check_outros();
       }
-      if (!current || dirty & /*$readonlyStore*/
+      if (!current || dirty & /*$read*/
       1) {
-        toggle_class(div1, "disabled", !/*$readonlyStore*/
+        toggle_class(div1, "disabled", !/*$read*/
         ctx2[0].interpretation.enabled);
       }
     },
@@ -2004,8 +2042,8 @@ function create_fragment$2(ctx) {
     },
     p(ctx2, [dirty]) {
       const inputcontainer_changes = {};
-      if (dirty & /*$$scope, $readonlyStore, byteData*/
-      515) {
+      if (dirty & /*$$scope, $read, byteData*/
+      259) {
         inputcontainer_changes.$$scope = { dirty, ctx: ctx2 };
       }
       inputcontainer.$set(inputcontainer_changes);
@@ -2029,31 +2067,24 @@ function create_fragment$2(ctx) {
 }
 function instance$2($$self, $$props, $$invalidate) {
   let byteData;
-  let $readonlyStore;
-  const readonlyStore = readonly(appStore);
-  component_subscribe($$self, readonlyStore, (value) => $$invalidate(0, $readonlyStore = value));
+  let $read;
+  component_subscribe($$self, read, ($$value) => $$invalidate(0, $read = $$value));
   const byteDataPlaceholder = new Array(8);
   const handleCheckboxClick = () => {
-    const action = $readonlyStore.interpretation.enabled ? storeActions.interpretation.disable : storeActions.interpretation.enable;
+    const action = $read.interpretation.enabled ? actions.interpretation.disable : actions.interpretation.enable;
     action();
   };
   const handleBitDataChange = (index, event) => {
     const newLabel = event.detail.value;
-    storeActions.interpretation.setBitLabel(newLabel, index);
+    actions.interpretation.setBitLabel(newLabel, index);
   };
   $$self.$$.update = () => {
-    if ($$self.$$.dirty & /*$readonlyStore*/
+    if ($$self.$$.dirty & /*$read*/
     1) {
-      $$invalidate(1, byteData = merge($readonlyStore.interpretation.byteData, byteDataPlaceholder));
+      $$invalidate(1, byteData = merge($read.interpretation.byteData, byteDataPlaceholder));
     }
   };
-  return [
-    $readonlyStore,
-    byteData,
-    readonlyStore,
-    handleCheckboxClick,
-    handleBitDataChange
-  ];
+  return [$read, byteData, handleCheckboxClick, handleBitDataChange];
 }
 class ByteDataInputs extends SvelteComponent {
   constructor(options) {
@@ -2067,7 +2098,7 @@ function create_fragment$1(ctx) {
   let h3;
   let textContent = "Tranformation Settings";
   let t1;
-  let button0;
+  let button;
   let t2;
   let selectinput0;
   let updating_value;
@@ -2076,20 +2107,17 @@ function create_fragment$1(ctx) {
   let updating_value_1;
   let t4;
   let bytedatainputs;
-  let t5;
-  let button1;
-  let textContent_1 = "Clear History";
   let current;
   let mounted;
   let dispose;
   function selectinput0_value_binding(value) {
-    ctx[7](value);
+    ctx[5](value);
   }
   let selectinput0_props = {
     label: "Input Format",
     options: (
       /*formatOptions*/
-      ctx[5]
+      ctx[3]
     )
   };
   if (
@@ -2104,16 +2132,16 @@ function create_fragment$1(ctx) {
   selectinput0.$on(
     "change",
     /*updateSettings*/
-    ctx[6]
+    ctx[4]
   );
   function selectinput1_value_binding(value) {
-    ctx[8](value);
+    ctx[6](value);
   }
   let selectinput1_props = {
     label: "Output Format",
     options: (
       /*formatOptions*/
-      ctx[5]
+      ctx[3]
     )
   };
   if (
@@ -2128,7 +2156,7 @@ function create_fragment$1(ctx) {
   selectinput1.$on(
     "change",
     /*updateSettings*/
-    ctx[6]
+    ctx[4]
   );
   bytedatainputs = new ByteDataInputs({});
   return {
@@ -2138,16 +2166,13 @@ function create_fragment$1(ctx) {
       h3 = element("h3");
       h3.textContent = textContent;
       t1 = space();
-      button0 = element("button");
+      button = element("button");
       t2 = space();
       create_component(selectinput0.$$.fragment);
       t3 = space();
       create_component(selectinput1.$$.fragment);
       t4 = space();
       create_component(bytedatainputs.$$.fragment);
-      t5 = space();
-      button1 = element("button");
-      button1.textContent = textContent_1;
       this.h();
     },
     l(nodes) {
@@ -2158,8 +2183,8 @@ function create_fragment$1(ctx) {
       h3 = claim_element(div0_nodes, "H3", { class: true, ["data-svelte-h"]: true });
       if (get_svelte_dataset(h3) !== "svelte-1uhkebd") h3.textContent = textContent;
       t1 = claim_space(div0_nodes);
-      button0 = claim_element(div0_nodes, "BUTTON", { class: true });
-      children(button0).forEach(detach);
+      button = claim_element(div0_nodes, "BUTTON", { class: true });
+      children(button).forEach(detach);
       div0_nodes.forEach(detach);
       t2 = claim_space(div1_nodes);
       claim_component(selectinput0.$$.fragment, div1_nodes);
@@ -2167,49 +2192,35 @@ function create_fragment$1(ctx) {
       claim_component(selectinput1.$$.fragment, div1_nodes);
       t4 = claim_space(div1_nodes);
       claim_component(bytedatainputs.$$.fragment, div1_nodes);
-      t5 = claim_space(div1_nodes);
-      button1 = claim_element(div1_nodes, "BUTTON", { class: true, ["data-svelte-h"]: true });
-      if (get_svelte_dataset(button1) !== "svelte-127bu1e") button1.textContent = textContent_1;
       div1_nodes.forEach(detach);
       this.h();
     },
     h() {
-      attr(h3, "class", "text-color title svelte-1t2xw9");
-      attr(button0, "class", "close-btn svelte-1t2xw9");
-      attr(div0, "class", "title-box svelte-1t2xw9");
-      attr(button1, "class", "button-clear-history svelte-1t2xw9");
-      attr(div1, "class", "container svelte-1t2xw9");
+      attr(h3, "class", "text-color title svelte-1786y2z");
+      attr(button, "class", "close-btn svelte-1786y2z");
+      attr(div0, "class", "title-box svelte-1786y2z");
+      attr(div1, "class", "container svelte-1786y2z");
     },
     m(target, anchor) {
       insert_hydration(target, div1, anchor);
       append_hydration(div1, div0);
       append_hydration(div0, h3);
       append_hydration(div0, t1);
-      append_hydration(div0, button0);
+      append_hydration(div0, button);
       append_hydration(div1, t2);
       mount_component(selectinput0, div1, null);
       append_hydration(div1, t3);
       mount_component(selectinput1, div1, null);
       append_hydration(div1, t4);
       mount_component(bytedatainputs, div1, null);
-      append_hydration(div1, t5);
-      append_hydration(div1, button1);
       current = true;
       if (!mounted) {
-        dispose = [
-          listen(
-            button0,
-            "click",
-            /*handleCloseClick*/
-            ctx[3]
-          ),
-          listen(
-            button1,
-            "click",
-            /*handleClearHistory*/
-            ctx[4]
-          )
-        ];
+        dispose = listen(
+          button,
+          "click",
+          /*handleCloseClick*/
+          ctx[2]
+        );
         mounted = true;
       }
     },
@@ -2254,24 +2265,20 @@ function create_fragment$1(ctx) {
       destroy_component(selectinput1);
       destroy_component(bytedatainputs);
       mounted = false;
-      run_all(dispose);
+      dispose();
     }
   };
 }
 function instance$1($$self, $$props, $$invalidate) {
-  let $readonlyStore;
-  const readonlyStore = readonly(appStore);
-  component_subscribe($$self, readonlyStore, (value) => $$invalidate(9, $readonlyStore = value));
-  let input = $readonlyStore.preset.input;
-  let output = $readonlyStore.preset.output;
+  let $read;
+  component_subscribe($$self, read, ($$value) => $$invalidate(7, $read = $$value));
+  let input = $read.preset.input;
+  let output = $read.preset.output;
   const dispatch = createEventDispatcher();
   const handleCloseClick = () => dispatch("close");
-  const handleClearHistory = () => {
-    storeActions.clearHistory();
-  };
   const formatOptions = Object.values(FORMATS).reduce((acc, format) => ({ ...acc, [format.type]: format.title }), {});
   const updateSettings = () => {
-    storeActions.updateSettings({ input, output });
+    actions.updateSettings({ input, output });
   };
   function selectinput0_value_binding(value) {
     input = value;
@@ -2284,9 +2291,7 @@ function instance$1($$self, $$props, $$invalidate) {
   return [
     input,
     output,
-    readonlyStore,
     handleCloseClick,
-    handleClearHistory,
     formatOptions,
     updateSettings,
     selectinput0_value_binding,
@@ -2304,11 +2309,82 @@ function get_each_context(ctx, list, i) {
   child_ctx[7] = list[i];
   return child_ctx;
 }
+function create_if_block_1(ctx) {
+  let div;
+  let button;
+  let textContent = "Clear History";
+  let button_transition;
+  let current;
+  let mounted;
+  let dispose;
+  return {
+    c() {
+      div = element("div");
+      button = element("button");
+      button.textContent = textContent;
+      this.h();
+    },
+    l(nodes) {
+      div = claim_element(nodes, "DIV", { class: true });
+      var div_nodes = children(div);
+      button = claim_element(div_nodes, "BUTTON", { class: true, ["data-svelte-h"]: true });
+      if (get_svelte_dataset(button) !== "svelte-1gqijh") button.textContent = textContent;
+      div_nodes.forEach(detach);
+      this.h();
+    },
+    h() {
+      attr(button, "class", "clear-button svelte-1yzxymj");
+      attr(div, "class", "clear-wrapper svelte-1yzxymj");
+    },
+    m(target, anchor) {
+      insert_hydration(target, div, anchor);
+      append_hydration(div, button);
+      current = true;
+      if (!mounted) {
+        dispose = listen(
+          button,
+          "click",
+          /*handleClearHistoryClick*/
+          ctx[6]
+        );
+        mounted = true;
+      }
+    },
+    p: noop,
+    i(local) {
+      if (current) return;
+      if (local) {
+        add_render_callback(() => {
+          if (!current) return;
+          if (!button_transition) button_transition = create_bidirectional_transition(button, blur, { duration: 300 }, true);
+          button_transition.run(1);
+        });
+      }
+      current = true;
+    },
+    o(local) {
+      if (local) {
+        if (!button_transition) button_transition = create_bidirectional_transition(button, blur, { duration: 300 }, false);
+        button_transition.run(0);
+      }
+      current = false;
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(div);
+      }
+      if (detaching && button_transition) button_transition.end();
+      mounted = false;
+      dispose();
+    }
+  };
+}
 function create_each_block(ctx) {
   let div;
   let historyentry;
   let t;
-  let div_transition;
+  let div_intro;
+  let div_outro;
   let current;
   historyentry = new HistoryEntry({
     props: { entry: (
@@ -2332,7 +2408,7 @@ function create_each_block(ctx) {
       this.h();
     },
     h() {
-      attr(div, "class", "history-entry svelte-1ejjyia");
+      attr(div, "class", "history-entry svelte-1yzxymj");
     },
     m(target, anchor) {
       insert_hydration(target, div, anchor);
@@ -2342,7 +2418,7 @@ function create_each_block(ctx) {
     },
     p(ctx2, dirty) {
       const historyentry_changes = {};
-      if (dirty & /*$readonlyStore*/
+      if (dirty & /*$read*/
       2) historyentry_changes.entry = /*historyEntry*/
       ctx2[7];
       historyentry.$set(historyentry_changes);
@@ -2353,17 +2429,18 @@ function create_each_block(ctx) {
       if (local) {
         add_render_callback(() => {
           if (!current) return;
-          if (!div_transition) div_transition = create_bidirectional_transition(div, blur, { duration: 300 }, true);
-          div_transition.run(1);
+          if (div_outro) div_outro.end(1);
+          div_intro = create_in_transition(div, slide, { duration: 300 });
+          div_intro.start();
         });
       }
       current = true;
     },
     o(local) {
       transition_out(historyentry.$$.fragment, local);
+      if (div_intro) div_intro.invalidate();
       if (local) {
-        if (!div_transition) div_transition = create_bidirectional_transition(div, blur, { duration: 300 }, false);
-        div_transition.run(0);
+        div_outro = create_out_transition(div, fade, { duration: 200 });
       }
       current = false;
     },
@@ -2372,7 +2449,7 @@ function create_each_block(ctx) {
         detach(div);
       }
       destroy_component(historyentry);
-      if (detaching && div_transition) div_transition.end();
+      if (detaching && div_outro) div_outro.end();
     }
   };
 }
@@ -2382,11 +2459,11 @@ function create_if_block(ctx) {
   bytedataviewer = new ByteDataViewer({
     props: {
       value: (
-        /*$readonlyStore*/
+        /*$read*/
         ctx[1].currentData
       ),
       data: (
-        /*$readonlyStore*/
+        /*$read*/
         ctx[1].interpretation.byteData
       )
     }
@@ -2404,11 +2481,11 @@ function create_if_block(ctx) {
     },
     p(ctx2, dirty) {
       const bytedataviewer_changes = {};
-      if (dirty & /*$readonlyStore*/
-      2) bytedataviewer_changes.value = /*$readonlyStore*/
+      if (dirty & /*$read*/
+      2) bytedataviewer_changes.value = /*$read*/
       ctx2[1].currentData;
-      if (dirty & /*$readonlyStore*/
-      2) bytedataviewer_changes.data = /*$readonlyStore*/
+      if (dirty & /*$read*/
+      2) bytedataviewer_changes.data = /*$read*/
       ctx2[1].interpretation.byteData;
       bytedataviewer.$set(bytedataviewer_changes);
     },
@@ -2430,20 +2507,25 @@ function create_fragment(ctx) {
   var _a, _b;
   let div4;
   let div1;
-  let div0;
   let t0;
+  let div0;
+  let t1;
   let div2;
   let convertviewer;
-  let t1;
   let t2;
+  let t3;
   let div3;
   let input;
-  let t3;
+  let t4;
   let div5;
   let settingspanel;
   let current;
+  let if_block0 = (
+    /*$read*/
+    ctx[1].history.length && create_if_block_1(ctx)
+  );
   let each_value = ensure_array_like(
-    /*$readonlyStore*/
+    /*$read*/
     ctx[1].history
   );
   let each_blocks = [];
@@ -2456,70 +2538,70 @@ function create_fragment(ctx) {
   convertviewer = new ConvertViewer({
     props: {
       format: (
-        /*$readonlyStore*/
+        /*$read*/
         (_b = (_a = ctx[1]) == null ? void 0 : _a.preset) == null ? void 0 : _b.output
       ),
       value: (
-        /*$readonlyStore*/
+        /*$read*/
         ctx[1].currentData
       ),
       placeholder: "helloworld",
       error: ERROR_MESSAGES == null ? void 0 : ERROR_MESSAGES[
-        /*$readonlyStore*/
+        /*$read*/
         ctx[1].error
       ]
     }
   });
-  let if_block = (
-    /*$readonlyStore*/
+  let if_block1 = (
+    /*$read*/
     ctx[1].interpretation.enabled && create_if_block(ctx)
   );
   input = new Input({
-    props: {
-      format: (
-        /*$readonlyStore*/
-        ctx[1].preset.input
-      )
-    }
+    props: { format: (
+      /*$read*/
+      ctx[1].preset.input
+    ) }
   });
   input.$on(
     "inputUpdate",
     /*handleInputUpdate*/
-    ctx[3]
+    ctx[2]
   );
   input.$on(
     "saveClick",
     /*handleSaveClick*/
-    ctx[4]
+    ctx[3]
   );
   input.$on(
     "settingsClick",
     /*handleSettingsOpenClick*/
-    ctx[5]
+    ctx[4]
   );
   settingspanel = new SettingsPanel({});
   settingspanel.$on(
     "close",
     /*handleSettingsCloseClick*/
-    ctx[6]
+    ctx[5]
   );
   return {
     c() {
       div4 = element("div");
       div1 = element("div");
+      if (if_block0) if_block0.c();
+      t0 = space();
       div0 = element("div");
       for (let i = 0; i < each_blocks.length; i += 1) {
         each_blocks[i].c();
       }
-      t0 = space();
+      t1 = space();
       div2 = element("div");
       create_component(convertviewer.$$.fragment);
-      t1 = space();
-      if (if_block) if_block.c();
       t2 = space();
+      if (if_block1) if_block1.c();
+      t3 = space();
       div3 = element("div");
       create_component(input.$$.fragment);
-      t3 = space();
+      t4 = space();
       div5 = element("div");
       create_component(settingspanel.$$.fragment);
       this.h();
@@ -2529,6 +2611,8 @@ function create_fragment(ctx) {
       var div4_nodes = children(div4);
       div1 = claim_element(div4_nodes, "DIV", { class: true });
       var div1_nodes = children(div1);
+      if (if_block0) if_block0.l(div1_nodes);
+      t0 = claim_space(div1_nodes);
       div0 = claim_element(div1_nodes, "DIV", { class: true });
       var div0_nodes = children(div0);
       for (let i = 0; i < each_blocks.length; i += 1) {
@@ -2536,20 +2620,20 @@ function create_fragment(ctx) {
       }
       div0_nodes.forEach(detach);
       div1_nodes.forEach(detach);
-      t0 = claim_space(div4_nodes);
+      t1 = claim_space(div4_nodes);
       div2 = claim_element(div4_nodes, "DIV", { class: true });
       var div2_nodes = children(div2);
       claim_component(convertviewer.$$.fragment, div2_nodes);
-      t1 = claim_space(div2_nodes);
-      if (if_block) if_block.l(div2_nodes);
+      t2 = claim_space(div2_nodes);
+      if (if_block1) if_block1.l(div2_nodes);
       div2_nodes.forEach(detach);
-      t2 = claim_space(div4_nodes);
+      t3 = claim_space(div4_nodes);
       div3 = claim_element(div4_nodes, "DIV", { class: true });
       var div3_nodes = children(div3);
       claim_component(input.$$.fragment, div3_nodes);
       div3_nodes.forEach(detach);
       div4_nodes.forEach(detach);
-      t3 = claim_space(nodes);
+      t4 = claim_space(nodes);
       div5 = claim_element(nodes, "DIV", { class: true });
       var div5_nodes = children(div5);
       claim_component(settingspanel.$$.fragment, div5_nodes);
@@ -2557,20 +2641,20 @@ function create_fragment(ctx) {
       this.h();
     },
     h() {
-      attr(div0, "class", "history-wrapper svelte-1ejjyia");
-      attr(div1, "class", "results svelte-1ejjyia");
-      attr(div2, "class", "quick-preview svelte-1ejjyia");
-      toggle_class(div2, "blurred", !/*$readonlyStore*/
+      attr(div0, "class", "history-wrapper svelte-1yzxymj");
+      attr(div1, "class", "results svelte-1yzxymj");
+      attr(div2, "class", "quick-preview svelte-1yzxymj");
+      toggle_class(div2, "blurred", !/*$read*/
       ctx[1].currentData);
-      attr(div3, "class", "input-box svelte-1ejjyia");
-      attr(div4, "class", "page-container svelte-1ejjyia");
+      attr(div3, "class", "input-box svelte-1yzxymj");
+      attr(div4, "class", "page-container svelte-1yzxymj");
       toggle_class(
         div4,
         "hidden",
         /*isSettingsOpened*/
         ctx[0]
       );
-      attr(div5, "class", "settings-container svelte-1ejjyia");
+      attr(div5, "class", "settings-container svelte-1yzxymj");
       toggle_class(
         div5,
         "shown",
@@ -2581,31 +2665,56 @@ function create_fragment(ctx) {
     m(target, anchor) {
       insert_hydration(target, div4, anchor);
       append_hydration(div4, div1);
+      if (if_block0) if_block0.m(div1, null);
+      append_hydration(div1, t0);
       append_hydration(div1, div0);
       for (let i = 0; i < each_blocks.length; i += 1) {
         if (each_blocks[i]) {
           each_blocks[i].m(div0, null);
         }
       }
-      append_hydration(div4, t0);
+      append_hydration(div4, t1);
       append_hydration(div4, div2);
       mount_component(convertviewer, div2, null);
-      append_hydration(div2, t1);
-      if (if_block) if_block.m(div2, null);
-      append_hydration(div4, t2);
+      append_hydration(div2, t2);
+      if (if_block1) if_block1.m(div2, null);
+      append_hydration(div4, t3);
       append_hydration(div4, div3);
       mount_component(input, div3, null);
-      insert_hydration(target, t3, anchor);
+      insert_hydration(target, t4, anchor);
       insert_hydration(target, div5, anchor);
       mount_component(settingspanel, div5, null);
       current = true;
     },
     p(ctx2, [dirty]) {
       var _a2, _b2;
-      if (dirty & /*$readonlyStore*/
+      if (
+        /*$read*/
+        ctx2[1].history.length
+      ) {
+        if (if_block0) {
+          if_block0.p(ctx2, dirty);
+          if (dirty & /*$read*/
+          2) {
+            transition_in(if_block0, 1);
+          }
+        } else {
+          if_block0 = create_if_block_1(ctx2);
+          if_block0.c();
+          transition_in(if_block0, 1);
+          if_block0.m(div1, t0);
+        }
+      } else if (if_block0) {
+        group_outros();
+        transition_out(if_block0, 1, 1, () => {
+          if_block0 = null;
+        });
+        check_outros();
+      }
+      if (dirty & /*$read*/
       2) {
         each_value = ensure_array_like(
-          /*$readonlyStore*/
+          /*$read*/
           ctx2[1].history
         );
         let i;
@@ -2628,49 +2737,49 @@ function create_fragment(ctx) {
         check_outros();
       }
       const convertviewer_changes = {};
-      if (dirty & /*$readonlyStore*/
-      2) convertviewer_changes.format = /*$readonlyStore*/
+      if (dirty & /*$read*/
+      2) convertviewer_changes.format = /*$read*/
       (_b2 = (_a2 = ctx2[1]) == null ? void 0 : _a2.preset) == null ? void 0 : _b2.output;
-      if (dirty & /*$readonlyStore*/
-      2) convertviewer_changes.value = /*$readonlyStore*/
+      if (dirty & /*$read*/
+      2) convertviewer_changes.value = /*$read*/
       ctx2[1].currentData;
-      if (dirty & /*$readonlyStore*/
+      if (dirty & /*$read*/
       2) convertviewer_changes.error = ERROR_MESSAGES == null ? void 0 : ERROR_MESSAGES[
-        /*$readonlyStore*/
+        /*$read*/
         ctx2[1].error
       ];
       convertviewer.$set(convertviewer_changes);
       if (
-        /*$readonlyStore*/
+        /*$read*/
         ctx2[1].interpretation.enabled
       ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-          if (dirty & /*$readonlyStore*/
+        if (if_block1) {
+          if_block1.p(ctx2, dirty);
+          if (dirty & /*$read*/
           2) {
-            transition_in(if_block, 1);
+            transition_in(if_block1, 1);
           }
         } else {
-          if_block = create_if_block(ctx2);
-          if_block.c();
-          transition_in(if_block, 1);
-          if_block.m(div2, null);
+          if_block1 = create_if_block(ctx2);
+          if_block1.c();
+          transition_in(if_block1, 1);
+          if_block1.m(div2, null);
         }
-      } else if (if_block) {
+      } else if (if_block1) {
         group_outros();
-        transition_out(if_block, 1, 1, () => {
-          if_block = null;
+        transition_out(if_block1, 1, 1, () => {
+          if_block1 = null;
         });
         check_outros();
       }
-      if (!current || dirty & /*$readonlyStore*/
+      if (!current || dirty & /*$read*/
       2) {
-        toggle_class(div2, "blurred", !/*$readonlyStore*/
+        toggle_class(div2, "blurred", !/*$read*/
         ctx2[1].currentData);
       }
       const input_changes = {};
-      if (dirty & /*$readonlyStore*/
-      2) input_changes.format = /*$readonlyStore*/
+      if (dirty & /*$read*/
+      2) input_changes.format = /*$read*/
       ctx2[1].preset.input;
       input.$set(input_changes);
       if (!current || dirty & /*isSettingsOpened*/
@@ -2694,22 +2803,24 @@ function create_fragment(ctx) {
     },
     i(local) {
       if (current) return;
+      transition_in(if_block0);
       for (let i = 0; i < each_value.length; i += 1) {
         transition_in(each_blocks[i]);
       }
       transition_in(convertviewer.$$.fragment, local);
-      transition_in(if_block);
+      transition_in(if_block1);
       transition_in(input.$$.fragment, local);
       transition_in(settingspanel.$$.fragment, local);
       current = true;
     },
     o(local) {
+      transition_out(if_block0);
       each_blocks = each_blocks.filter(Boolean);
       for (let i = 0; i < each_blocks.length; i += 1) {
         transition_out(each_blocks[i]);
       }
       transition_out(convertviewer.$$.fragment, local);
-      transition_out(if_block);
+      transition_out(if_block1);
       transition_out(input.$$.fragment, local);
       transition_out(settingspanel.$$.fragment, local);
       current = false;
@@ -2717,41 +2828,44 @@ function create_fragment(ctx) {
     d(detaching) {
       if (detaching) {
         detach(div4);
-        detach(t3);
+        detach(t4);
         detach(div5);
       }
+      if (if_block0) if_block0.d();
       destroy_each(each_blocks, detaching);
       destroy_component(convertviewer);
-      if (if_block) if_block.d();
+      if (if_block1) if_block1.d();
       destroy_component(input);
       destroy_component(settingspanel);
     }
   };
 }
 function instance($$self, $$props, $$invalidate) {
-  let $readonlyStore;
+  let $read;
+  component_subscribe($$self, read, ($$value) => $$invalidate(1, $read = $$value));
   let isSettingsOpened = false;
-  const readonlyStore = readonly(appStore);
-  component_subscribe($$self, readonlyStore, (value) => $$invalidate(1, $readonlyStore = value));
   const handleInputUpdate = (event) => {
     const { value } = event.detail;
-    storeActions.updateCurrentValue(value);
+    actions.updateCurrentValue(value);
   };
-  const handleSaveClick = () => storeActions.saveToHistory();
+  const handleSaveClick = () => actions.saveToHistory();
   const handleSettingsOpenClick = () => {
     $$invalidate(0, isSettingsOpened = true);
   };
   const handleSettingsCloseClick = () => {
     $$invalidate(0, isSettingsOpened = false);
   };
+  const handleClearHistoryClick = () => {
+    actions.clearHistory();
+  };
   return [
     isSettingsOpened,
-    $readonlyStore,
-    readonlyStore,
+    $read,
     handleInputUpdate,
     handleSaveClick,
     handleSettingsOpenClick,
-    handleSettingsCloseClick
+    handleSettingsCloseClick,
+    handleClearHistoryClick
   ];
 }
 class Page extends SvelteComponent {
