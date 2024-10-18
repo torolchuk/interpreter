@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slide, blur } from "svelte/transition";
+  import { slide, fade, blur } from "svelte/transition";
 
   import Input from "$lib/components/Input.svelte";
   import ConvertViewer from "$lib/components/ConvertViewer.svelte";
@@ -46,7 +46,8 @@
       { #each $read.history as historyEntry }
         <div
           class="history-entry"
-          transition:slide={{ duration: 300 }}
+          in:slide={{ duration: 300 }}
+          out:fade={{ duration: 200 }}
         >
           <HistoryEntry
             entry={historyEntry}
@@ -92,6 +93,7 @@
     margin: 0 0 50px;
     display: flex;
     flex-direction: column;
+    align-content: space-between;
     transition: all ease-out .2s;
   }
 
@@ -103,21 +105,30 @@
   }
 
   .clear-wrapper {
-    margin-bottom: 40px;
+    margin-bottom: auto;
     padding: 0 40px;
   }
 
   .clear-button {
     width: 100%;
-    border-radius: 8px;
-    padding: 8px;
-    border: 1px solid rgba(0, 0, 0, .2);
-    background: #fff;
-    box-shadow: inset 0 1px 4px 0 rgba(0, 0, 0, 0.25), inset 0 4px 16px 0 rgba(0, 0, 0, 0.1), 0 16px 64px 0 rgba(0, 0, 0, .1);
+    border-radius: 16px;
+    padding: 12px 8px;
+    border: none;
+    background: #d2d2d2;
+    box-shadow:
+      inset 0 1px 4px 0 rgba(255, 255, 255, 0.75),
+      inset 0 4px 16px 0 rgba(255, 255, 255, 0.4),
+      0 4px 16px 0 rgba(0, 20, 0, .1);
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    color: rgba(0, 0, 0, .4);
+    color: #fff;
+    margin-bottom: 40px;
+    transition: all .1s;
+  }
+
+  .clear-button:hover {
+    opacity: .8;
   }
 
   .settings-container {
@@ -163,10 +174,12 @@
   }
 
   .results {
-    margin-bottom: 24px;
-    margin-top: auto;
+    margin-bottom: auto;
     overflow-y: scroll;
     padding-top: 40px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .input-box {}
@@ -176,7 +189,11 @@
   }
 
   .history-entry {
-    margin-bottom: 20px;
+    padding: 10px 0;
+  }
+
+  .history-entry:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
   }
 </style>
 

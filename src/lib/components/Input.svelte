@@ -67,6 +67,15 @@
       inset 0 1px 4px 0 rgba(255, 255, 255, .20), 
       0 4px 16px 0 rgba(255, 204, 0, .36); 
   }
+
+
+  .hover-opacity {
+    transition: opacity .1s;
+  }
+  .hover-opacity:hover {
+    opacity: .8;
+  }
+
 </style>
 
 <script lang="ts">
@@ -109,14 +118,14 @@
   </div>
   { #if !isInputFocused }
     <button
-      class="settings-button"
+      class="settings-button hover-opacity"
       on:click={onSettingsClick}
     >
       <img src="{base}/icons/settings.png" alt="settings icon" />
     </button>
   { /if }
   <button
-    class="save-button"
+    class="save-button hover-opacity"
     on:click={onSaveClick}
   >
     <img src="{base}/icons/save.svg" alt="save icon" />
